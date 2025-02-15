@@ -1,4 +1,20 @@
-# COMP3331 Assignment - 19/20
+Start the resolver with 
+```
+python3 resolver.py
+```
+
+Start the express server with
+```
+npm start
+```
+
+Try do an test post request
+```
+curl -X POST http://localhost:5123/api/query \
+     -H "Content-Type: application/json" \
+     -d '{"domainName": "example.com"}'
+```
+
 
 ## Basic implementation
 `client.py` works with `resolver.py` correctly
