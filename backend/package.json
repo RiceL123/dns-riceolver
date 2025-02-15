@@ -1,7 +1,7 @@
 {
-  "name": "dns-resolver",
+  "name": "backend",
   "version": "1.0.0",
-  "description": "## Basic implementation `client.py` works with `resolver.py` correctly",
+  "description": "Start the resolver with  ``` python3 resolver.py ```",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -11,6 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "cors": "^2.8.5",
     "express": "^4.21.2"
   }
 }

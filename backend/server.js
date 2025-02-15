@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors');
 const { exec } = require('child_process');
 
 const app = express();
@@ -6,9 +7,13 @@ const port = 5123;
 
 const resolverPort = 5321;
 
+app.use(cors({
+    origin: "http://localhost:5173"
+}));
 app.use(express.json());
 
 app.post('/api/query', (req, res) => {
+    console.log(req.body)
     const { domainName } = req.body;
     if (!domainName) {
         return res.status(400).json({ error: "domainName missing" });
