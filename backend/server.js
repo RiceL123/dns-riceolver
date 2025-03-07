@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const { exec } = require('child_process');
+const { spawn } = require('child_process');
 
 const app = express();
 const port = 5123;
@@ -25,33 +25,62 @@ app.post('/api/query', (req, res) => {
         resolverPort = 53;
     }
 
+    let args = []
     let command;
 
     switch (queryBuilder) {
         case "default":
-            command = `python3 client.py ${resolver} ${resolverPort} ${input} --type ${recordType}`;
+            // command = `client.py ${resolver} ${resolverPort} ${input} --type ${recordType}`;
+            command = "./client.py";
+            args.push(resolver, resolverPort, input, "--type", recordType);
             break;
         case "dig":
-            command = `dig ${recordType == "PTR" ? "-x" : ""} ${input} ${recordType != "PTR" ? recordType : ""} @${resolver} -p ${resolverPort}`
+            // command = `dig ${recordType == "PTR" ? "-x" : ""} ${input} ${recordType != "PTR" ? recordType : ""} @${resolver} -p ${resolverPort}`
+            command = "dig";
+            if (recordType === "PTR") args.push("-x");
+            args.push(input);
+            if (recordType !== "PTR") args.push(recordType);
+            args.push(`@${resolver}`, "-p", resolverPort);
             break;
         default:
             return res.status(400).json({ error: "invalid query builder" });
     }
 
-    console.log(command);
+    // console.log(command);
+    console.log(args);
 
-    exec(command, (error, stdout, stderr) => {
-        if (error) {
-            console.error(`${error.message}`);
+    const process = spawn(command, args);
+
+    let output = "";
+    process.stdout.on("data", (data) => {
+        output += data.toString();
+    });
+
+    process.stderr.on("data", (data) => {
+        console.error(data.toString());
+    });
+
+    process.on("close", (code) => {
+        if (code !== 0) {
             return res.status(500).json({ error: "Error 😭" });
         }
-
-        if (stderr) {
-            console.warn(stderr);
-        }
-
-        res.json({ result: stdout })
+        res.json({ result: output });
     });
+    
+    // exec(command, (error, stdout, stderr) => {
+    //     if (error) {
+    //         console.error(`${error.message}`);
+    //         return res.status(500).json({ error: "Error 😭" });
+    //     }
+
+    //     if (stderr) {
+    //         console.warn(stderr);
+    //     }
+
+    //     res.json({ result: stdout })
+    // });
+
+
 });
 
 app.listen(port, () => {

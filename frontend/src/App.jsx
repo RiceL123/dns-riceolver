@@ -160,7 +160,7 @@ function App() {
           </div>
           <div className="grid place-content-center border-t border-base-300 min-h-80 bg-base-100 ">
             {loading && <span className="loading loading-spinner loading-xl"></span>}
-            <pre className='my-4'><code className='mx-2'>{answer}</code></pre>
+            <pre className='my-4 mx-2'><code className='text-wrap'>{answer}</code></pre>
           </div>
         </div>
       </main>
