@@ -66,21 +66,6 @@ app.post('/api/query', (req, res) => {
         }
         res.json({ result: output });
     });
-    
-    // exec(command, (error, stdout, stderr) => {
-    //     if (error) {
-    //         console.error(`${error.message}`);
-    //         return res.status(500).json({ error: "Error 😭" });
-    //     }
-
-    //     if (stderr) {
-    //         console.warn(stderr);
-    //     }
-
-    //     res.json({ result: stdout })
-    // });
-
-
 });
 
 app.listen(port, () => {
