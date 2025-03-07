@@ -13,7 +13,7 @@ export function About() {
       <dialog id="my_modal_2" className="modal">
         <div className="modal-box">
           <h3 className="font-bold text-xl">A DNS Desolver built in python</h3>
-          <p>Implemented according to the <a className="link" href="https://datatracker.ietf.org/doc/html/rfc1035">RFC1035</a></p>
+          <p>Implemented according to a subset of the <a className="link" href="https://datatracker.ietf.org/doc/html/rfc1035">RFC1035</a></p>
           <p className="py-4 text-xl underline">Client</p>
           <p>You can use my custom query builder or <a className="link" href="https://linux.die.net/man/1/dig">dig</a></p>
           <p className='py-4 text-lg underline'>Queries</p>
@@ -28,7 +28,7 @@ export function About() {
           <p>You can use my custom resolver or any of the listed resolvers like google's at 8.8.8.8</p>
 
           <p className='mt-4 text-end text-xs'>All the code for this project is available on my <a className="link" href="https://github.com/RiceL123/DNS-resolver">GitHub</a></p>
-          <p className='mt-4 text-end text-xs'>Made by RiceL123</p>
+          <p className='mt-4 text-end text-xs'>Made by <a className="link" href="https://ricel123-links.onrender.com/">RiceL123</a></p>
           <form method="dialog">
             <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
           </form>
