@@ -5,9 +5,6 @@ const { exec } = require('child_process');
 const app = express();
 const port = 5123;
 
-const resolveIP = "127.0.0.1"
-const resolverPort = 5321;
-
 app.use(cors({
     origin: "http://localhost:5173"
 }));
@@ -15,38 +12,44 @@ app.use(express.json());
 
 app.post('/api/query', (req, res) => {
     console.log(req.body)
-    const { domainName } = req.body;
-    if (!domainName) {
+    const { input, queryBuilder, recordType, resolver } = req.body.question;
+    if (!input) {
         return res.status(400).json({ error: "domainName missing" });
     }
 
-    // const digCommand = `dig ${domainName} @${resolverIP} -p ${resolverPort}`;
+    let resolverPort;
+    console.log(resolver);
+    if (resolver == "127.0.0.1") {
+        resolverPort = 5321;
+    } else {
+        resolverPort = 53;
+    }
 
-    // exec(digCommand, (error, stdout, stderr) => {
-    //     if (error) {
-    //         console.error(`Error executing dig: ${error.message}`);
-    //         return res.status(500).json({ error: "Failed to resolve domain" });
-    //     }
+    let command;
 
-    //     if (stderr) {
-    //         console.warn(`dig stderr: ${stderr}`);
-    //     }
-        
-    //     res.json({ result: stdout })
-    // });
+    switch (queryBuilder) {
+        case "default":
+            command = `python3 client.py ${resolver} ${resolverPort} ${input} --type ${recordType}`;
+            break;
+        case "dig":
+            command = `dig ${recordType == "PTR" ? "-x" : ""} ${input} ${recordType != "PTR" ? recordType : ""} @${resolver} -p ${resolverPort}`
+            break;
+        default:
+            return res.status(400).json({ error: "invalid query builder" });
+    }
 
-    const command = `python3 client.py ${resolveIP} ${resolverPort} ${domainName}`;
+    console.log(command);
 
     exec(command, (error, stdout, stderr) => {
         if (error) {
-            console.error(`Error executing client.py: ${error.message}`);
-            return res.status(500).json({ error: "Failed to resolve domain" });
+            console.error(`${error.message}`);
+            return res.status(500).json({ error: "Error 😭" });
         }
 
         if (stderr) {
-            console.warn(`client.py stderr: ${stderr}`);
+            console.warn(stderr);
         }
-        
+
         res.json({ result: stdout })
     });
 });
