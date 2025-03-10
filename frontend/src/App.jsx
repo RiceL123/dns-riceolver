@@ -4,7 +4,7 @@ import './App.css'
 import { About } from './About'
 
 function App() {
-  const expressServerPort = 5123;
+  // const expressServerPort = 5123;
   const [theme, setTheme] = useState("autumn");
   const [loading, setLoading] = useState(false);
   const [input, setInput] = useState("");
@@ -32,8 +32,15 @@ function App() {
     setLoading(true);
 
     try {
-      const response = await fetch(`http://localhost:${expressServerPort}/api/query`, {
-        method: "POST",
+      // const response = await fetch(`http://localhost:${expressServerPort}/api/query`, {
+      //   method: "POST",
+      //   headers: { "Content-Type": "application/json" },
+      //   body: JSON.stringify({ question })
+      // })
+
+      const API_URL = import.meta.env.BACKEND_URL || "http://localhost:5123";
+      const response = await fetch(`${API_URL}/api/query`, {
+      method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ question })
       })

@@ -6,7 +6,7 @@ const app = express();
 const port = 5123;
 
 app.use(cors({
-    origin: "http://localhost:5173"
+    origin: ["http://localhost:5173", "https://dns-riceolver.vercel.app"]
 }));
 app.use(express.json());
 
