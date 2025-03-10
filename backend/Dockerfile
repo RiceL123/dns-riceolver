@@ -11,12 +11,14 @@ RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash - && \
 
 RUN ln -s /usr/bin/python3 /usr/bin/python
 
-WORKDIR /
+WORKDIR /app
 
+COPY package*.json ./
 RUN npm install
 
 COPY . .
 
+
 EXPOSE 5123 5321 53
 
-CMD sh -c "python3 server.py & npm start"
+CMD sh -c "python3 ../server.py & npm start"
