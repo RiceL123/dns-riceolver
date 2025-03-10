@@ -1,9 +1,8 @@
-# Use an official lightweight image with both Python and Node
 FROM ubuntu:22.04
 
 RUN apt-get update && apt-get install -y \
     curl \
-    python3 python3-venv \
+    python3 python3-venv python3-pip \
     dnsutils \
     && rm -rf /var/lib/apt/lists/*
 
@@ -12,12 +11,13 @@ RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash - && \
 
 RUN ln -s /usr/bin/python3 /usr/bin/python
 
-COPY . .
+WORKDIR /app
 
+COPY package*.json ./
 RUN npm install
 
-# Expose necessary ports (change if needed)
-# EXPOSE 8000
+COPY . .
 
-CMD ["python3", "server.py"]
-CMD ["npm start"]
+EXPOSE 5123 5321 53
+
+CMD sh -c "python3 server.py & npm start"
