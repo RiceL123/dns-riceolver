@@ -13,7 +13,7 @@ RUN ln -s /usr/bin/python3 /usr/bin/python
 
 WORKDIR /app
 
-COPY package*.json ./
+COPY package.json package-lock.json ./
 RUN npm install
 
 COPY . .
@@ -21,4 +21,4 @@ COPY . .
 
 EXPOSE 5123 5321 53
 
-CMD sh -c "python3 ../server.py & npm start"
+CMD sh -c "python3 resolver.py & npm start"
