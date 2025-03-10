@@ -11,9 +11,8 @@ RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash - && \
 
 RUN ln -s /usr/bin/python3 /usr/bin/python
 
-WORKDIR /app
+WORKDIR /
 
-COPY package*.json ./
 RUN npm install
 
 COPY . .
