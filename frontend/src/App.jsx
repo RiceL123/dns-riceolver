@@ -38,7 +38,7 @@ function App() {
       //   body: JSON.stringify({ question })
       // })
 
-      const API_URL = import.meta.env.BACKEND_URL || "http://localhost:5123";
+      const API_URL = "https://dns-riceolver.onrender.com";
       const response = await fetch(`${API_URL}/api/query`, {
       method: "POST",
         headers: { "Content-Type": "application/json" },
