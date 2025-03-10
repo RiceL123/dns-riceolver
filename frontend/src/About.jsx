@@ -11,7 +11,7 @@ export function About() {
       </button>
       <dialog id="my_modal_2" className="modal">
         <div className="modal-box">
-          <h3 className="font-bold text-xl">A DNS Desolver built in python</h3>
+          <h3 className="font-bold text-xl">A DNS resolver in python</h3>
           <p>Implemented according to a subset of the <a className="link" href="https://datatracker.ietf.org/doc/html/rfc1035">RFC1035</a></p>
           <p className="py-4 text-xl underline">Client</p>
           <p>You can use my custom query builder or <a className="link" href="https://linux.die.net/man/1/dig">dig</a></p>
@@ -26,7 +26,26 @@ export function About() {
           </ul>
           <p className="py-4 text-xl underline">Resolver</p>
           <p>You can use my custom resolver or any of the listed resolvers like google's at 8.8.8.8</p>
-
+          <div className='divider'></div>
+          <p>Built / Deployed with</p>
+          <div className='text-sm'>
+            <p>
+              <span className="font-bold">Backend: </span>
+              <a className="link" href="https://www.python.org/">Python</a>,{" "}
+              <a className="link" href="https://nodejs.org/en">NodeJS</a>,{" "}
+              <a className="link" href="https://expressjs.com/">Express</a>,{" "}
+              <a className="link" href="https://www.docker.com/">Docker</a>,{" "}
+              <a className="link" href="https://render.com/">Render</a>
+            </p>
+            <p>
+              <span className="font-bold">Frontend: </span>
+              <a className="link" href="https://react.dev/">React</a>,{" "}
+              <a className="link" href="https://tailwindcss.com/">TailwindCSS</a>,{" "}
+              <a className="link" href="https://daisyui.com/">Daisy UI</a>,{" "}
+              <a className="link" href="https://vite.dev/">Vite</a>,{" "}
+              <a className="link" href="https://vercel.com/">Vercel</a>
+            </p>
+          </div>
           <p className='mt-4 text-end text-xs'>All the code for this project is available on my <a className="link" href="https://github.com/RiceL123/DNS-resolver">GitHub</a></p>
           <p className='mt-4 text-end text-xs'>Made by <a className="link" href="https://ricel123-links.onrender.com/">RiceL123</a></p>
           <form method="dialog">

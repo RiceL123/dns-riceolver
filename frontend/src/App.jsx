@@ -40,7 +40,7 @@ function App() {
 
       const API_URL = "https://dns-riceolver.onrender.com";
       const response = await fetch(`${API_URL}/api/query`, {
-      method: "POST",
+        method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ question })
       })
@@ -129,7 +129,7 @@ function App() {
             <legend className="fieldset-legend text-primary">{inputDesc.label}</legend>
             <input type="text" className="input grow border-secondary" placeholder={inputDesc.placeholder} value={input} onChange={e => setInput(e.target.value)} />
           </fieldset>
-          <div className='flex gap-4 justify-around'>
+          <div className='flex gap-4 justify-around items-end'>
             <fieldset className="fieldset grow basis-0">
               <legend className="fieldset-legend text-primary">Query Builders</legend>
               <select defaultValue="RiceL123's querier" className="select border-secondary" onChange={e => setQueryBuilder(e.target.value)}>
