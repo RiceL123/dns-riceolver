@@ -3,6 +3,8 @@ import './App.css'
 
 import { About } from './About'
 
+const API_URL = "https://dns-riceolver.onrender.com";
+
 function App() {
   // const expressServerPort = 5123;
   const [theme, setTheme] = useState("autumn");
@@ -38,7 +40,6 @@ function App() {
       //   body: JSON.stringify({ question })
       // })
 
-      const API_URL = "https://dns-riceolver.onrender.com";
       const response = await fetch(`${API_URL}/api/query`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -82,6 +83,13 @@ function App() {
       })
     }
   }, [recordType]);
+
+  useEffect(() => {
+    // warm up backend - because it will spin down
+    fetch(`${API_URL}/healthcheck`)
+    .then(res => console.log(res))
+    .catch(e => console.error(e));
+  }, []);
 
   return (
     <>

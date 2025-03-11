@@ -10,7 +10,7 @@ export function About() {
         About
       </button>
       <dialog id="my_modal_2" className="modal">
-        <div className="modal-box">
+        <div className="modal-box max-h-[90dvh]">
           <h3 className="font-bold text-xl">A DNS resolver in python</h3>
           <p>Implemented according to a subset of the <a className="link" href="https://datatracker.ietf.org/doc/html/rfc1035">RFC1035</a></p>
           <p className="py-4 text-xl underline">Client</p>

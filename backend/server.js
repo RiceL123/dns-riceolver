@@ -68,6 +68,10 @@ app.post('/api/query', (req, res) => {
     });
 });
 
+app.get("/healthcheck", (_, res) => {
+    return res.status(200);
+})
+
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
 });
