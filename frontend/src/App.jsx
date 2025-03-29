@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react'
-import './App.css'
-
+import { useQuery } from '@tanstack/react-query'
 import { About } from './About'
+import './App.css'
 
 const API_URL = "https://dns-riceolver.onrender.com";
 
 function App() {
   // const expressServerPort = 5123;
   const [theme, setTheme] = useState("autumn");
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [input, setInput] = useState("");
   const [inputDesc, setInputDesc] = useState({
     label: "Domain",
@@ -18,57 +18,39 @@ function App() {
   const [recordType, setRecordType] = useState("A");
   const [resolver, setResolver] = useState("127.0.0.1");
 
-  const [question, setQuestion] = useState({
-    input,
-    queryBuilder,
-    recordType,
-    resolver
-  });
+  const question = { input, queryBuilder, recordType, resolver };
 
   const [showError, setShowError] = useState("hidden")
-
   const [answer, setAnswer] = useState("hello there 👋")
 
-  const handleQuery = async () => {
-    setAnswer("");
-    setLoading(true);
-
-    try {
-      // const response = await fetch(`http://localhost:${expressServerPort}/api/query`, {
-      //   method: "POST",
-      //   headers: { "Content-Type": "application/json" },
-      //   body: JSON.stringify({ question })
-      // })
+  const { isPending, error, data, refetch } = useQuery({
+    queryKey: [question],
+    queryFn: async () => {
+      setAnswer("");
 
       const response = await fetch(`${API_URL}/api/query`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ question })
-      })
+      });
 
-      const data = await response.json();
+      return await response.json();
+    },
+    enabled: false
+  })
 
-      if (!response.ok) {
-        setShowError("");
-        setAnswer(data.error || "Failed to resolve 😭")
-        setTimeout(() => setShowError("hidden"), 4000);
-        throw new Error(data.error || "Failed to resolve");
-      }
-
-      setAnswer(data.result)
-    } finally {
-      setLoading(false)
-    }
+  const handleQuery = async () => {
+    setIsLoading(true);
+    refetch();
   }
 
   useEffect(() => {
-    setQuestion({
-      input,
-      queryBuilder,
-      recordType,
-      resolver
-    });
-  }, [input, queryBuilder, recordType, resolver]);
+    if (data && data.result) { setIsLoading(false); setAnswer(data.result); }
+  }, [data]);
+
+  useEffect(() => {
+    if (error) { setIsLoading(false); setAnswer(error.message) }
+  }, [error]);
 
   useEffect(() => {
     if (recordType == "PTR") {
@@ -85,10 +67,31 @@ function App() {
   }, [recordType]);
 
   useEffect(() => {
-    // warm up backend - because it will spin down
-    fetch(`${API_URL}/healthcheck`)
-    .then(res => console.log(res))
-    .catch(e => console.error(e));
+    async function warmup() {
+      setIsLoading(true);
+      setAnswer("Warming up backend 🔥");
+  
+      try {
+        const response = await fetch(`${API_URL}/healthcheck`);
+  
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+  
+        const text = await response.text(); // ✅ Read response
+        console.log("Warm-up response:", text);
+  
+        setAnswer("hello there 👋");
+      } catch (error) {
+        console.error("Warm-up failed:", error);
+        setAnswer("Failed to warm up backend ❌ ggs");
+      } finally {
+        setAnswer("hello there 👋");
+        setIsLoading(false);
+      }
+    }
+
+    warmup();
   }, []);
 
   return (
@@ -124,7 +127,7 @@ function App() {
         </svg>
       </label>
 
-      <div role="alert" className={`alert alert-error absolute bottom-0 left-0 m-4 ${showError}`}>
+      <div role="alert" className={`alert alert-error absolute bottom-0 left-0 m-4 ${showError && "hidden"}`}>
         <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 shrink-0 stroke-current" fill="none" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
@@ -174,7 +177,7 @@ function App() {
             <div className="input text-base-content bg-base-100 border-secondary grow">{JSON.stringify(question)}</div>
           </div>
           <div className="grid place-content-center border-t border-base-300 min-h-80 bg-base-100 ">
-            {loading && <span className="loading loading-spinner loading-xl"></span>}
+            {isLoading && <span className="loading loading-spinner loading-xl mx-auto"></span>}
             <pre className='my-4 mx-2'><code className='text-wrap'>{answer}</code></pre>
           </div>
         </div>

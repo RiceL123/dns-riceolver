@@ -69,7 +69,7 @@ app.post('/api/query', (req, res) => {
 });
 
 app.get("/healthcheck", (_, res) => {
-    return res.status(200);
+    return res.status(200).send("ok");
 })
 
 app.listen(port, () => {
