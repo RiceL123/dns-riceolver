@@ -6,7 +6,6 @@ import './App.css'
 const API_URL = "https://dns-riceolver.onrender.com";
 
 function App() {
-  // const expressServerPort = 5123;
   const [theme, setTheme] = useState("autumn");
   const [isLoading, setIsLoading] = useState(false);
   const [input, setInput] = useState("");
@@ -20,19 +19,33 @@ function App() {
 
   const question = { input, queryBuilder, recordType, resolver };
 
-  const [showError, setShowError] = useState("hidden")
+  const [showError, setShowError] = useState(false)
   const [answer, setAnswer] = useState("hello there 👋")
 
-  const { isPending, error, data, refetch } = useQuery({
-    queryKey: [question],
+  function displayError(message) {
+    setIsLoading(false);
+    setShowError(true);
+    setAnswer(message);
+
+    setTimeout(() => {
+      setShowError(false)
+    }, 5000);
+  }
+
+  const { error, data, refetch } = useQuery({
+    queryKey: [JSON.stringify(question)],
     queryFn: async () => {
-      setAnswer("");
+      setAnswer("Getting Answers...");
 
       const response = await fetch(`${API_URL}/api/query`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ question })
       });
+
+      if (!response.ok) {
+        displayError("Error 💀: " + response.status)
+      }
 
       return await response.json();
     },
@@ -49,7 +62,7 @@ function App() {
   }, [data]);
 
   useEffect(() => {
-    if (error) { setIsLoading(false); setAnswer(error.message) }
+    if (error) { displayError(error.message) }
   }, [error]);
 
   useEffect(() => {
@@ -70,23 +83,21 @@ function App() {
     async function warmup() {
       setIsLoading(true);
       setAnswer("Warming up backend 🔥");
-  
+
       try {
         const response = await fetch(`${API_URL}/healthcheck`);
-  
+
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
-  
-        const text = await response.text(); // ✅ Read response
+
+        const text = await response.text();
         console.log("Warm-up response:", text);
-  
+
         setAnswer("hello there 👋");
       } catch (error) {
-        console.error("Warm-up failed:", error);
-        setAnswer("Failed to warm up backend ❌ ggs");
+        displayError("Failed to warm up backend ❌ ggs")
       } finally {
-        setAnswer("hello there 👋");
         setIsLoading(false);
       }
     }
@@ -127,18 +138,28 @@ function App() {
         </svg>
       </label>
 
-      <div role="alert" className={`alert alert-error absolute bottom-0 left-0 m-4 ${showError && "hidden"}`}>
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 shrink-0 stroke-current" fill="none" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
-        </svg>
-        <span>Error with dns resolution</span>
+      <div role="alert" className={`alert alert-error absolute bottom-0 left-0 m-4 ${!showError && "hidden"}`}>
+        <button onClick={() => setShowError(false)}>
+          <div className='flex gap-2 items-center'>
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 shrink-0 stroke-current" fill="none" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span>Error with dns resolution</span>
+          </div>
+        </button>
       </div>
 
       <main data-theme={theme} className='bg-transparent mx-auto w-full max-w-4xl my-10'>
         <div className='flex flex-col sm:flex-row gap-4 m-2 sm:items-end'>
           <fieldset className="flex grow mb-1">
             <legend className="fieldset-legend text-primary">{inputDesc.label}</legend>
-            <input type="text" className="input grow border-secondary" placeholder={inputDesc.placeholder} value={input} onChange={e => setInput(e.target.value)} />
+            <input
+              type="text"
+              className="input grow border-secondary"
+              placeholder={inputDesc.placeholder}
+              value={input}
+              onChange={e => setInput(e.target.value)}
+              onKeyDown={e => e.key === "Enter" && handleQuery()} />
           </fieldset>
           <div className='flex gap-4 justify-around items-end'>
             <fieldset className="fieldset grow basis-0">

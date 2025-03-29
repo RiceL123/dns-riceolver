@@ -12,6 +12,12 @@ export function About() {
       <dialog id="my_modal_2" className="modal">
         <div className="modal-box max-h-[90dvh]">
           <h3 className="font-bold text-xl">A DNS resolver in python</h3>
+          <div className="my-2 flex items-center gap-2">
+            <div className="badge badge-info">
+              <svg className="size-[1em]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="currentColor" strokeLinejoin="miter" strokeLinecap="butt"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" strokeLinecap="square" stroke-miterlimit="10" strokeWidth="2"></circle><path d="m12,17v-5.5c0-.276-.224-.5-.5-.5h-1.5" fill="none" stroke="currentColor" strokeLinecap="square" stroke-miterlimit="10" strokeWidth="2"></path><circle cx="12" cy="7.25" r="1.25" fill="currentColor" strokeWidth="2"></circle></g></svg>
+            </div>
+            <p>The Domain Name System (DNS) translates human readable domains like 'twitter.com' to IP address (like 123.727.2.4) which is what the network actually uses</p>
+          </div>
           <p>Implemented according to a subset of the <a className="link" href="https://datatracker.ietf.org/doc/html/rfc1035">RFC1035</a></p>
           <p className="py-4 text-xl underline">Client</p>
           <p>You can use my custom query builder or <a className="link" href="https://linux.die.net/man/1/dig">dig</a></p>
